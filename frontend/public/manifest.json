@@ -1,0 +1,34 @@
+{
+  "name": "Fire Safety Calculation & Education System",
+  "short_name": "Fire Safety Pro",
+  "description": "Professional fire safety calculations, compliance tracking, and team collaboration platform",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#ffffff",
+  "theme_color": "#ef4444",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ],
+  "categories": ["business", "productivity"],
+  "shortcuts": [
+    {
+      "name": "Fire Calculation",
+      "short_name": "Fire Calc",
+      "description": "Quick fire load calculation",
+      "url": "/fire"
+    },
+    {
+      "name": "Take Quiz",
+      "short_name": "Quiz",
+      "description": "Start a quiz session",
+      "url": "/quiz"
+    }
+  ]
+}
