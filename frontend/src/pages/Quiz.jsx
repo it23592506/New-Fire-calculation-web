@@ -853,6 +853,22 @@ function resultBand(scorePercent) {
   return "Needs reinforcement";
 }
 
+function shuffleQuestionOptions(question) {
+  const pairs = question.options.map((option, index) => ({
+    option,
+    isCorrect: index === question.answer
+  }));
+
+  for (let i = pairs.length - 1; i > 0; i -= 1) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [pairs[i], pairs[j]] = [pairs[j], pairs[i]];
+  }
+
+  const options = pairs.map((row) => row.option);
+  const answer = pairs.findIndex((row) => row.isCorrect);
+  return { ...question, options, answer };
+}
+
 export default function Quiz() {
   const [deckId, setDeckId] = useState(null);
   const [index, setIndex] = useState(0);
@@ -860,11 +876,12 @@ export default function Quiz() {
   const [submitted, setSubmitted] = useState(false);
   const [secondsLeft, setSecondsLeft] = useState(0);
   const [history, setHistory] = useState([]);
+  const [activeQuestions, setActiveQuestions] = useState([]);
 
   const deck = useMemo(() => quizDecks.find((item) => item.id === deckId) || null, [deckId]);
-  const questions = deck?.questions || [];
+  const questions = activeQuestions;
   const current = questions[index];
-  const currentAnswer = answers[index];
+  const currentAnswer = current ? answers[current.id] : undefined;
 
   const answeredCount = Object.keys(answers).length;
 
@@ -872,13 +889,13 @@ export default function Quiz() {
     if (!deck) {
       return 0;
     }
-    return deck.questions.reduce((acc, question, i) => {
-      if (answers[i] === question.answer) {
+    return questions.reduce((acc, question) => {
+      if (answers[question.id] === question.answer) {
         return acc + 1;
       }
       return acc;
     }, 0);
-  }, [answers, deck]);
+  }, [answers, deck, questions]);
 
   const scorePercent = deck ? Math.round((score / deck.questions.length) * 100) : 0;
   const badges = useMemo(() => {
@@ -928,15 +945,21 @@ export default function Quiz() {
     setDeckId(selectedDeck.id);
     setIndex(0);
     setAnswers({});
+    setActiveQuestions(
+      selectedDeck.questions.map((question, qIndex) => ({
+        ...shuffleQuestionOptions(question),
+        id: `${selectedDeck.id}-q${qIndex + 1}`
+      }))
+    );
     setSubmitted(false);
     setSecondsLeft(selectedDeck.durationMinutes * 60);
   }
 
   function chooseAnswer(optionIndex) {
-    if (submitted) {
+    if (submitted || !current) {
       return;
     }
-    setAnswers((prev) => ({ ...prev, [index]: optionIndex }));
+    setAnswers((prev) => ({ ...prev, [current.id]: optionIndex }));
   }
 
   function submitQuiz() {
@@ -1088,7 +1111,7 @@ export default function Quiz() {
 
                 <div className="quiz-review-list">
                   {questions.map((question, questionIndex) => {
-                    const selected = answers[questionIndex];
+                    const selected = answers[question.id];
                     const isCorrect = selected === question.answer;
                     return (
                       <article

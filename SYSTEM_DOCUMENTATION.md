@@ -510,3 +510,5 @@ For questions or issues regarding this system, please contact:
 **Last Updated:** April 2026  
 **Status:** Production Ready ✅
 
+**cd c:/Users/User/Downloads/fe/backend; npm.cmd run dev
+**cd c:/Users/User/Downloads/fe/frontend; npm.cmd run dev

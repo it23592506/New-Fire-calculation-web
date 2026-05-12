@@ -4,108 +4,132 @@ import api from "../services/api";
 import { isAdmin } from "../services/auth";
 import StatCard from "../components/StatCard";
 
-const calculationTools = [
+const calculationCategories = [
   {
-    icon: "🔥",
-    title: "Fire Calculations",
-    desc: "Fire Load, Fire Load Density, Heat Release Rate",
-    to: "/fire"
+    label: "Fire load and geometry",
+    description: "Start with the base inputs that define the hazard and space.",
+    tools: [
+      {
+        icon: "🔥",
+        title: "Fire Calculations",
+        desc: "Fire Load, Fire Load Density, Heat Release Rate",
+        to: "/fire"
+      },
+      {
+        icon: "🏢",
+        title: "Area Calculations",
+        desc: "Floor area, Volume, Ventilation",
+        to: "/area"
+      },
+      {
+        icon: "👥",
+        title: "Occupant Load & Exit Width",
+        desc: "Required exits, occupancy density, egress width",
+        to: "/occupant-load"
+      },
+      {
+        icon: "🚶",
+        title: "Evacuation Time",
+        desc: "RSET vs ASET, egress margin",
+        to: "/evacuation"
+      }
+    ]
   },
   {
-    icon: "🧯",
-    title: "Fire Extinguisher",
-    desc: "Number of extinguishers, Coverage area",
-    to: "/extinguisher"
+    label: "Suppression and water supply",
+    description: "Size the active protection systems and storage that support them.",
+    tools: [
+      {
+        icon: "🧯",
+        title: "Fire Extinguisher",
+        desc: "Number of extinguishers, Coverage area",
+        to: "/extinguisher"
+      },
+      {
+        icon: "🚒",
+        title: "Hydrant System",
+        desc: "Flow rate, Pump power, Water demand",
+        to: "/hydrant"
+      },
+      {
+        icon: "💦",
+        title: "Sprinkler Demand",
+        desc: "Hazard class, Density, Hydraulic demand",
+        to: "/sprinkler"
+      },
+      {
+        icon: "🛢️",
+        title: "Fire Water Tank",
+        desc: "Tank volume from flow and duration",
+        to: "/water-tank"
+      },
+      {
+        icon: "🫧",
+        title: "Foam System Concentrate",
+        desc: "Tank sizing for AFFF/AR-AFFF proportioning",
+        to: "/foam-system"
+      }
+    ]
   },
   {
-    icon: "🚒",
-    title: "Hydrant System",
-    desc: "Flow rate, Pump power, Water demand",
-    to: "/hydrant"
+    label: "Detection and life safety",
+    description: "Cover alarm, detection, smoke control, and resistance checks.",
+    tools: [
+      {
+        icon: "🚨",
+        title: "Detection System",
+        desc: "Smoke & heat detectors, Spacing",
+        to: "/detection"
+      },
+      {
+        icon: "💨",
+        title: "Smoke Exhaust Sizing",
+        desc: "Exhaust airflow by compartment area & fire scenario",
+        to: "/smoke-exhaust"
+      },
+      {
+        icon: "🔥",
+        title: "Fire Resistance Rating",
+        desc: "Wall/door/slab ratings by building height & use",
+        to: "/fire-rating"
+      },
+      {
+        icon: "🔋",
+        title: "Battery Backup Sizing",
+        desc: "AH capacity for detection & alarm systems",
+        to: "/battery-backup"
+      },
+      {
+        icon: "⚡",
+        title: "Cable Derating & Fire Circuits",
+        desc: "Ampacity with temperature & grouping factors",
+        to: "/cable-derating"
+      },
+      {
+        icon: "⚙️",
+        title: "Generator Sizing",
+        desc: "kVA for pumps, fans, alarms with diversity factor",
+        to: "/generator-sizing"
+      }
+    ]
   },
   {
-    icon: "💦",
-    title: "Sprinkler Demand",
-    desc: "Hazard class, Density, Hydraulic demand",
-    to: "/sprinkler"
-  },
-  {
-    icon: "🛢️",
-    title: "Fire Water Tank",
-    desc: "Tank volume from flow and duration",
-    to: "/water-tank"
-  },
-  {
-    icon: "🚶",
-    title: "Evacuation Time",
-    desc: "RSET vs ASET, egress margin",
-    to: "/evacuation"
-  },
-  {
-    icon: "🚨",
-    title: "Detection System",
-    desc: "Smoke & heat detectors, Spacing",
-    to: "/detection"
-  },
-  {
-    icon: "🏢",
-    title: "Area Calculations",
-    desc: "Floor area, Volume, Ventilation",
-    to: "/area"
-  },
-  {
-    icon: "📄",
-    title: "Reports",
-    desc: "View & download saved reports",
-    to: "/reports"
-  },
-  {
-    icon: "🧪",
-    title: "Scenario Simulator",
-    desc: "What-if sliders with live risk visualization",
-    to: "/simulator"
-  },
-  {
-    icon: "👥",
-    title: "Occupant Load & Exit Width",
-    desc: "Required exits, occupancy density, egress width",
-    to: "/occupant-load"
-  },
-  {
-    icon: "💨",
-    title: "Smoke Exhaust Sizing",
-    desc: "Exhaust airflow by compartment area & fire scenario",
-    to: "/smoke-exhaust"
-  },
-  {
-    icon: "🔥",
-    title: "Fire Resistance Rating",
-    desc: "Wall/door/slab ratings by building height & use",
-    to: "/fire-rating"
-  },
-  {
-    icon: "🔋",
-    title: "Battery Backup Sizing",
-    desc: "AH capacity for detection & alarm systems",
-    to: "/battery-backup"
-  },
-  {
-    icon: "⚡",
-    title: "Cable Derating & Fire Circuits",
-    desc: "Ampacity with temperature & grouping factors",
-    to: "/cable-derating"
-  },
-  {
-    icon: "🫧",
-    title: "Foam System Concentrate",
-    desc: "Tank sizing for AFFF/AR-AFFF proportioning",
-    to: "/foam-system"
-  },
-  {
-    icon: "⚙️",
-    title: "Generator Sizing",
-    desc: "kVA for pumps, fans, alarms with diversity factor",
-    to: "/generator-sizing"
+    label: "Review and simulation",
+    description: "Use the output layer to document, compare, and validate decisions.",
+    tools: [
+      {
+        icon: "📄",
+        title: "Reports",
+        desc: "View & download saved reports",
+        to: "/reports"
+      },
+      {
+        icon: "🧪",
+        title: "Scenario Simulator",
+        desc: "What-if sliders with live risk visualization",
+        to: "/simulator"
+      }
+    ]
   }
 ];
 
@@ -251,8 +275,8 @@ export default function Home() {
         });
       },
       {
-        threshold: 0.35,
-        rootMargin: "-10% 0px -35% 0px"
+        threshold: 0.1,
+        rootMargin: "0px 0px -20% 0px"
       }
     );
 
@@ -395,21 +419,36 @@ export default function Home() {
           <div className="ur-heading">
             <p className="ur-chip">Section Explorer</p>
             <h2 className="ur-heading-title">Clear command links for the core fire engineering stack</h2>
+            <p className="ur-muted">Grouped by discipline so engineers can jump straight to the calculation family they need.</p>
           </div>
 
-          <div className="ur-explorer-grid">
-            {calculationTools.map((cat, index) => (
-              <Link
-                key={cat.to}
-                to={cat.to}
-                className={`ur-explorer-tile tone-${(index % 6) + 1}`}
-                style={{ animationDelay: `${index * 90}ms` }}
-              >
-                <span className="ur-explorer-icon">{cat.icon}</span>
-                <h3>{cat.title}</h3>
-                <p>{cat.desc}</p>
-                <span className="ur-explorer-cta">Explore Module</span>
-              </Link>
+          <div className="ur-category-list">
+            {calculationCategories.map((category, categoryIndex) => (
+              <section key={category.label} className="ur-category-block">
+                <div className="ur-category-header">
+                  <div>
+                    <p className="ur-category-kicker">{category.label}</p>
+                    <p className="ur-category-desc">{category.description}</p>
+                  </div>
+                  <span className="ur-category-count">{category.tools.length} links</span>
+                </div>
+
+                <div className="ur-explorer-grid">
+                  {category.tools.map((cat, index) => (
+                    <Link
+                      key={cat.to}
+                      to={cat.to}
+                      className={`ur-explorer-tile tone-${((categoryIndex + index) % 6) + 1}`}
+                      style={{ animationDelay: `${(categoryIndex * 120) + (index * 90)}ms` }}
+                    >
+                      <span className="ur-explorer-icon">{cat.icon}</span>
+                      <h3>{cat.title}</h3>
+                      <p>{cat.desc}</p>
+                      <span className="ur-explorer-cta">Explore Module</span>
+                    </Link>
+                  ))}
+                </div>
+              </section>
             ))}
           </div>
         </div>

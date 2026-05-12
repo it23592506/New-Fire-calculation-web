@@ -1,0 +1,34 @@
+const { calculate } = require('../src/utils/engineeringCalculations');
+
+const cases = [
+  ['fire_load', { materials: [{ mass: 100, calorific: 18 }, { mass: 20, calorific: 35 }] }],
+  ['fire_load_density', { Q: 2500, area: 100 }],
+  ['hrr', { massLossRate: 0.2, heatOfCombustion: 18000 }],
+  ['floor_area', { length: 20, width: 15 }],
+  ['volume', { length: 20, width: 15, height: 4 }],
+  ['ventilation', { airflow: 1.8, roomVolume: 1200 }],
+  ['occupant_load', { area: 200, occupantFactor: 1.5 }],
+  ['exit_width', { occupants: 134, widthFactorMm: 5 }],
+  ['rset_aset', { detection: 30, alarm: 20, preMovement: 45, travel: 70, aset: 300 }],
+  ['hydrant', { hydrantCount: 2, flowPerHydrant: 900, pressure: 4, velocity: 2.5 }],
+  ['sprinkler', { density: 8, area: 140, hazardClass: 'ordinary' }],
+  ['water_tank', { flow: 1800, durationMin: 60 }],
+  ['foam_system', { solutionVolume: 10000, concentrationPct: 3 }],
+  ['smoke_detector', { area: 500, coverage: 84 }],
+  ['heat_detector', { area: 500, coverage: 50 }],
+  ['smoke_exhaust', { area: 300, airflowRate: 10 }],
+  ['fire_resistance', { buildingHeight: 30, occupancy: 'office' }],
+  ['battery_backup', { current: 8, timeHours: 24, derating: 0.8 }],
+  ['cable_derating', { nominalCurrent: 100, ca: 0.94, cg: 0.85, ci: 0.9 }],
+  ['generator', { kW: 120, powerFactor: 0.8, sparePct: 25 }],
+];
+
+for (const [module, payload] of cases) {
+  const result = calculate(module, payload);
+  if (!result || !result.module) {
+    throw new Error(`No result for module: ${module}`);
+  }
+  console.log(`${module}: ${result.status}`);
+}
+
+console.log('Engineering smoke test passed.');

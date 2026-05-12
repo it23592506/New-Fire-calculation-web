@@ -74,6 +74,12 @@ export default function OccupantLoad() {
       return;
     }
 
+    if (!Number.isNaN(occupants) && occupants < 0) {
+      setError("Occupant override cannot be negative");
+      setLoading(false);
+      return;
+    }
+
     const localResult = calculateLocal({
       occupancyType,
       floorArea: area,

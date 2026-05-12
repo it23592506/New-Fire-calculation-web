@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import api from "../services/api";
+import { isAuthenticated } from "../services/auth";
 
 export default function Detection() {
   const [area, setArea] = useState("");
@@ -8,10 +9,12 @@ export default function Detection() {
   const [detectorType, setDetectorType] = useState("smoke");
   const [result, setResult] = useState(null);
   const [error, setError] = useState("");
+  const [notice, setNotice] = useState("");
   const [loading, setLoading] = useState(false);
 
   const calculate = async () => {
     setError("");
+    setNotice("");
     setLoading(true);
     const a = parseFloat(area);
     const h = parseFloat(height);
@@ -34,7 +37,20 @@ export default function Detection() {
 
     const count = Math.max(2, Math.ceil(a / config.coverage));
 
+    setResult({
+      count,
+      coverage: config.coverage,
+      spacing: config.spacing,
+      type: detectorType
+    });
+
     try {
+      if (!isAuthenticated()) {
+        setNotice("Calculated locally. Sign in to save this report.");
+        setLoading(false);
+        return;
+      }
+
       const res = await api.post("/calculate/custom", {
         calculatorType: "detection",
         title: `Detection System Report (${detectorType})`,
@@ -50,7 +66,7 @@ export default function Detection() {
         type: data.type || detectorType
       });
     } catch (err) {
-      setError(err.response?.data?.message || "Calculation saved failed");
+      setNotice(err.response?.data?.message || "Calculated locally, but saving failed.");
     } finally {
       setLoading(false);
     }
@@ -82,6 +98,7 @@ export default function Detection() {
           </select>
         </label>
         {error && <p className="error-text">{error}</p>}
+        {notice && <p className="muted">{notice}</p>}
 
         <button className="primary-btn" disabled={loading} onClick={calculate}>
           {loading ? "Calculating..." : "Calculate & Save Report"}

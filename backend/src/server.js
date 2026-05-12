@@ -15,6 +15,9 @@ const auditRoutes = require("./routes/audit");
 const analyticsRoutes = require("./routes/analytics");
 const integrationsRoutes = require("./routes/integrations");
 const badgesRoutes = require("./routes/badges");
+const fireQaRoutes = require("./routes/fireQa");
+const extinguishersRoutes = require("./routes/extinguishers");
+const engineeringRoutes = require("./routes/engineering");
 
 const app = express();
 app.use(
@@ -42,6 +45,9 @@ app.use("/api", auditRoutes);
 app.use("/api", analyticsRoutes);
 app.use("/api", integrationsRoutes);
 app.use("/api", badgesRoutes);
+app.use("/api", fireQaRoutes);
+app.use("/api", extinguishersRoutes);
+app.use("/api", engineeringRoutes);
 
 app.use((err, _req, res, _next) => {
   console.error(err);

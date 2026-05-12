@@ -48,6 +48,11 @@ export default function FoamSystem() {
     const reserve = toNumber(reserveMultiplier);
     const tankDesign = toNumber(tankDesignFactor);
     if ([area, rate, dur, reserve, tankDesign].some((v)=>Number.isNaN(v))) { setError("Please enter valid inputs"); setLoading(false); return; }
+    if (area <= 0 || rate <= 0 || dur <= 0 || reserve <= 0 || tankDesign <= 0) {
+      setError("All inputs must be greater than 0");
+      setLoading(false);
+      return;
+    }
     const localResult = calculateLocal({ protectedArea: area, applicationRate: rate, foamType, applicationDurationMin: dur, reserveMultiplier: reserve, tankDesignFactor: tankDesign });
     setResult(localResult);
     try {
