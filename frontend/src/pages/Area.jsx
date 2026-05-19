@@ -34,7 +34,16 @@ export default function Area() {
     const ventFactor = o > 0 && oh > 0 ? (o * Math.sqrt(oh)).toFixed(2) : "N/A";
     const airChanges = o > 0 && oh > 0 ? ((o * Math.sqrt(oh) * 3600) / volume).toFixed(1) : "N/A";
     const airChangesValue = o > 0 && oh > 0 ? Number(airChanges) : 0;
-    const localRiskCategory = airChangesValue === 0 ? "High" : airChangesValue >= 10 ? "Low" : "Medium";
+    const localRiskCategory = airChangesValue === 0 ? "High" : airChangesValue >= 10 ? "Low" : airChangesValue >= 5 ? "Medium" : "High";
+
+    if (o < 0 || oh < 0) {
+      setError("Opening values cannot be negative");
+      setLoading(false);
+      return;
+    }
+    if (airChangesValue > 100) {
+      setNotice("Warning: Air changes per hour appears unrealistic (>100).");
+    }
 
     setResult({
       floorArea: Number(floorArea.toFixed(2)),

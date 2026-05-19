@@ -56,6 +56,11 @@ export default function SmokeExhaust() {
       setLoading(false);
       return;
     }
+    if (area <= 0 || height <= 0 || prod <= 0 || exch <= 0 || safety <= 0) {
+      setError("All inputs must be greater than 0");
+      setLoading(false);
+      return;
+    }
     const localResult = calculateLocal({ compartmentArea: area, ceilingHeight: height, fireScenario, smokeProductionRate: prod, exchangesPerHour: exch, safetyFactor: safety });
     setResult(localResult);
     try {

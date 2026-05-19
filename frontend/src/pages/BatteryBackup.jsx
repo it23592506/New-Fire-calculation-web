@@ -59,6 +59,11 @@ export default function BatteryBackup() {
       setLoading(false);
       return;
     }
+    if (detectors <= 0 || alarmP <= 0 || standby <= 0 || alarmH <= 0 || voltage <= 0 || safety <= 0) {
+      setError("All inputs must be greater than 0");
+      setLoading(false);
+      return;
+    }
     const localResult = calculateLocal({ detectorCount: detectors, alarmPowerW: alarmP, standbyHours: standby, alarmHours: alarmH, voltageV: voltage, safetyFactor: safety });
     setResult(localResult);
     try {

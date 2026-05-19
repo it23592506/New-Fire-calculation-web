@@ -55,6 +55,16 @@ export default function GeneratorSizing() {
     const demand = toNumber(demandFactor);
     const margin = toNumber(loadMargin);
     if ([pump, fan, alarm, lighting, controls, diversity, demand, margin].some((v)=>Number.isNaN(v))) { setError("Please enter valid inputs"); setLoading(false); return; }
+    if ([pump, fan, alarm, lighting, controls, margin].some((v) => v < 0)) {
+      setError("Load values and margin cannot be negative");
+      setLoading(false);
+      return;
+    }
+    if (diversity <= 0 || diversity > 1 || demand <= 0 || demand > 1) {
+      setError("Diversity and demand factors must be between 0 and 1");
+      setLoading(false);
+      return;
+    }
     const localResult = calculateLocal({ pumpKW: pump, fanKW: fan, alarmKW: alarm, lightingKW: lighting, controlsKW: controls, diversityFactor: diversity, demandFactor: demand, loadMargin: margin });
     setResult(localResult);
     try {

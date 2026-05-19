@@ -55,6 +55,11 @@ export default function CableDerating() {
       setLoading(false);
       return;
     }
+    if (amp <= 0 || grp <= 0) {
+      setError("Ampacity and grouping must be greater than 0");
+      setLoading(false);
+      return;
+    }
     const localResult = calculateLocal({ ampacity: amp, cableType, insulationTemp, ambientTemp, grouping: grp });
     setResult(localResult);
     try {
